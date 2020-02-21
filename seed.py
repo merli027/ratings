@@ -1,12 +1,11 @@
 """Utility file to seed ratings database from MovieLens data in seed_data/"""
 
 from sqlalchemy import func
-from model import User
-# from model import Rating
-# from model import Movie
+from model import User, Rating, Movie
 
 from model import connect_to_db, db
 from server import app
+from datetime import datetime
 
 
 def load_users():
@@ -19,7 +18,7 @@ def load_users():
     User.query.delete()
 
     # Read u.user file and insert data
-    for row in open("seed_data/u.user"):
+    for i, row in enumerate(open("seed_data/u.user")):
         row = row.rstrip()
         user_id, age, gender, occupation, zipcode = row.split("|")
 
@@ -30,16 +29,59 @@ def load_users():
         # We need to add to the session or it won't ever be stored
         db.session.add(user)
 
+        # progess yay
+        if i % 100 == 0:
+            print(i)
+
     # Once we're done, we should commit our work
     db.session.commit()
 
 
 def load_movies():
     """Load movies from u.item into database."""
+    for i, row in enumerate(open('seed_data/u.item')):
+        row = row.rstrip()
+
+        movie_id, title, release_date_str, junk, imdb_url = row.split("|")[:5]
+
+        if release_date_str:
+            release_date = datetime.strptime(release_date_str, "%d-%b-%Y")
+        else:
+            release_date = None
+
+        title = title[:-7]  # Stripping the release year off title
+
+        movie = Movie(title=title,
+                      release_date=release_date,
+                      imdb_url=imdb_url)
+
+        db.session.add(movie)
+
+        # progess yay!
+        if i % 100 == 0:
+            print(i)
+
+    db.session.commit()
 
 
 def load_ratings():
     """Load ratings from u.data into database."""
+    for i, row in enumerate(open('seed_data/u.data')):
+        row = row.rstrip()
+        user_id, movie_id, score = row.split("\t")[:3]
+
+
+        movie = Rating(user_id=user_id,
+                       movie_id=movie_id,
+                       score=score)
+
+        db.session.add(movie)
+
+        # progess yay!
+        if i % 1000 == 0:
+            print(i)
+
+    db.session.commit()
 
 
 def set_val_user_id():

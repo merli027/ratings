@@ -1,6 +1,7 @@
 """Models and database functions for Ratings project."""
 
 from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
 
 # This is the connection to the PostgreSQL database; we're getting this through
 # the Flask-SQLAlchemy helper library. On this, we can find the `session`
@@ -37,10 +38,16 @@ class Movie(db.Model):
     __tablename__ = "movies"
 
     movie_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    title = db.Column(db.String(64), nullable=True)
-    released_at = db.Column(db.DateTime(), nullable=True)
+    title = db.Column(db.String(100))
+    release_date = db.Column(db.DateTime())
     # unsure on String length here, check docs
-    imdb_url = db.Column(db.String(100), nullable=True)
+    imdb_url = db.Column(db.String(200))
+
+    def __repr__(self):
+        """Provide helpful representation when printed."""
+
+        return f"<Movie movie_id={self.movie_id} title={self.title}>"
+
 
 class Rating(db.Model):
     """User of ratings website."""
@@ -49,10 +56,18 @@ class Rating(db.Model):
 
     rating_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     # Is this the correct way to SQLA foreign keys?
-    movie_id = db.Column(db.Integer, nullable=True)
+    movie_id = db.Column(db.Integer)
     # Is this the correct way to SQLA foreign keys?
-    user_id = db.Column(db.Integer, nullable=True)
-    score = db.Column(db.Integer, nullable=True)
+    user_id = db.Column(db.Integer)
+    score = db.Column(db.Integer)
+
+    def __repr__(self):
+        """Provide helpful representation when printed."""
+
+        return f"""<Rating rating_id={self.rating_id}
+                   movie_id={self.movie_id}
+                   user_id={self.user_id}
+                   score={self.score}>"""
 
 
 ##############################################################################

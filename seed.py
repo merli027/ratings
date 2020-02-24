@@ -51,7 +51,8 @@ def load_movies():
 
         title = title[:-7]  # Stripping the release year off title
 
-        movie = Movie(title=title,
+        movie = Movie(movie_id=movie_id,
+                      title=title,
                       release_date=release_date,
                       imdb_url=imdb_url)
 
@@ -70,12 +71,11 @@ def load_ratings():
         row = row.rstrip()
         user_id, movie_id, score = row.split("\t")[:3]
 
+        rating = Rating(user_id=user_id,
+                        movie_id=movie_id,
+                        score=score)
 
-        movie = Rating(user_id=user_id,
-                       movie_id=movie_id,
-                       score=score)
-
-        db.session.add(movie)
+        db.session.add(rating)
 
         # progess yay!
         if i % 1000 == 0:

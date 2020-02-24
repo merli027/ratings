@@ -37,7 +37,7 @@ class Movie(db.Model):
 
     __tablename__ = "movies"
 
-    movie_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    movie_id = db.Column(db.Integer, autoincrement=False, primary_key=True)
     title = db.Column(db.String(100))
     release_date = db.Column(db.DateTime())
     # unsure on String length here, check docs
@@ -55,11 +55,17 @@ class Rating(db.Model):
     __tablename__ = "ratings"
 
     rating_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    # Is this the correct way to SQLA foreign keys?
-    movie_id = db.Column(db.Integer)
-    # Is this the correct way to SQLA foreign keys?
-    user_id = db.Column(db.Integer)
+    # Foreign key: movies.movie_id
+    movie_id = db.Column(db.Integer, db.ForeignKey('movies.movie_id'))
+    # Foreign key: users.user_id
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
     score = db.Column(db.Integer)
+
+    # Defining the relationshipto movie
+    movie = db.relationship("Movie", backref=db.backref("ratings", order_by=rating_id))
+
+    # Defining the relationship to user
+    user = db.relationship("User", backref=db.backref("ratings", order_by=rating_id))
 
     def __repr__(self):
         """Provide helpful representation when printed."""

@@ -25,6 +25,60 @@ def index():
     return render_template("homepage.html")
 
 
+@app.route('/register', methods=["GET", "POST"])
+def add_user():
+    """Add user to database."""
+
+    if request.method == "POST":
+        email = request.form.get("email")
+        password = request.form.get("password")
+        # Where does the null go
+        age = int(request.form.get("age"))
+        # where does the null go
+        zipcode = request.form.get("zipcode")
+
+        new_user = User(email=email, password=password, age=age, zipcode=zipcode)
+
+        db.session.add(new_user)
+        db.session.commit()
+
+        flash(f"User {email} added")
+        # Redirect to /login for better UX
+        return redirect("/")
+    else:
+        return render_template("register_form.html")
+
+
+@app.route('/login', methods=["GET"])
+def login_form():
+    """Login in form."""
+
+    return render_template("login_form.html")
+
+
+@app.route('/login', methods=["POST"])
+def login_user():
+    """Logs in user."""
+
+    email = request.form["email"]
+    password = request.form["password"]
+
+    user = User.query.filter_by(email=email).first()
+
+    if not user:
+        flash("No such user")
+        return redirect("/login")
+
+    if user.password != password:
+        flash("Wrong password")
+        return redirect("/login")
+
+    session["user_id"] = user.user_id
+    flash("Logged in")
+
+    return redirect(f"/users/{user.user_id}")
+
+
 @app.route('/users')
 def user_list():
     """User List."""
@@ -32,6 +86,14 @@ def user_list():
     users = User.query.all()
     return render_template("user_list.html", users=users)
 
+
+@app.route('/users/<int:user_id>')
+def user_detail(user_id):
+    """User details."""
+
+    user = User.query.get(user_id)
+
+    return render_template("user.html", user=user)
 
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the

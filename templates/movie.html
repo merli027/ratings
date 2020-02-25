@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %}{{ movie.movie_id }}{% endblock %}
+{% block content %}
+
+  <div>Title is: {{ movie.title }}</div>
+
+  <div>Release date: {{ movie.release_date }}</div>
+
+  <div>
+    IMDb:<a href="{{ movie.imdb_url }}">{{ movie.title }}</a> 
+  </div>
+
+  <label for="ratings">User ratings: </label>
+  <!-- Basically pseudocode, need to check syntax on grabbing these from the db -->
+  {% for rating in movie.ratings %}
+    <div name="ratings">User: {{ rating.user.email }} Rating: {{ rating.score }}</div>
+  {% endfor %}
+{% endblock %}

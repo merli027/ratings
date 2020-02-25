@@ -95,6 +95,24 @@ def user_detail(user_id):
 
     return render_template("user.html", user=user)
 
+
+@app.route('/movies')
+def movie_list():
+    """Movie List."""
+
+    movies = Movie.query.all()
+    return render_template("movie_list.html", movies=movies)
+
+
+@app.route('/movies/<int:movie_id>')
+def movie_detail(movie_id):
+    """Movie details."""
+
+    movie = Movie.query.get(movie_id)
+
+    return render_template("movie.html", movie=movie)
+
+
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the
     # point that we invoke the DebugToolbarExtension

@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block title %}Register{% endblock %}
+{% block content %}
+  <form action="/register" method="POST">
+    <label for="email">Email: </label>
+    <input type="text" name="email" placeholder="example@example.com" required>
+    <label for="password">Password: </label>
+    <input type="password" name="password" placeholder="passw0Rd" required>
+    <label for="age">Age (optional): </label>
+    <input type="text" name="age" placeholder="18" >
+    <label for="zipcode">Zipcode (optional): </label>
+    <input type="text" name="zipcode" placeholder="55082" >
+
+    <button type="submit">Submit</button>
+  </form>
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block title %}{{ user.user_id }}{% endblock %}
+{% block content %}
+
+  <div>Hi, {{ user.email }}</div>
+
+  <div>Your age: {{ user.age }}</div>
+
+  <div>Your zipcode: {{ user.zipcode }}</div>
+
+  <label for="ratings">Movies you've rated: </label>
+  <!-- Basically pseudocode, need to check syntax on grabbing these from the db -->
+  {% for rating in user.ratings %}
+    <div name="ratings">Movie: {{ rating.movie.title }} Rating: {{ rating.score }}</div>
+  {% endfor %}
+{% endblock %}

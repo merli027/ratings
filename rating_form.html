@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block title %}{{ movie.movie_id }}{% endblock %}
+{% block content %}
+
+  <div>Hi, {{ rating.user.email }}!</div>
+
+  <div>Title is: {{ movie.title }}</div>
+
+  <div>Release date: {{ movie.release_date }}</div>
+
+  <div>
+    IMDb:<a href="{{ movie.imdb_url }}">{{ movie.title }}</a> 
+  </div>
+
+  <div>
+    <form action="/movies/<int:movie_id>" method="POST">
+      {% for rating in movie.ratings if rating.user_id=user_id %}
+          <!-- 
+          We need:
+          movie_id  > Take this from the page  # already passed in route
+          user_id   > Take this from the page  # hidden variable
+          score     > Get this from the user
+          <input type="hidden" id="user_id" name="user_id" value="{{ rating.user.user_id }}">
+          -->
+        
+        Rate: <input type="text" name="new_score">
+        {% else %}
+
+      {% endfor %}
+    </form>
+  </div>
+
+  <label for="ratings">User ratings: </label>
+  <!-- Basically pseudocode, need to check syntax on grabbing these from the db -->
+  {% for rating in movie.ratings %}
+    <div name="ratings">User: {{ rating.user.email }} Rating: {{ rating.score }}</div>
+  {% endfor %}
+{% endblock %}

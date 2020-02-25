@@ -100,17 +100,23 @@ def user_detail(user_id):
 def movie_list():
     """Movie List."""
 
-    movies = Movie.query.all()
+    movies = Movie.query.order_by(Movie.title).all()
     return render_template("movie_list.html", movies=movies)
 
 
-@app.route('/movies/<int:movie_id>')
+@app.route('/movies/<int:movie_id>', methods=["POST"])
 def movie_detail(movie_id):
     """Movie details."""
+    if 'user_id' not in session:
 
-    movie = Movie.query.get(movie_id)
+        movie = Movie.query.get(movie_id)
 
-    return render_template("movie.html", movie=movie)
+        return render_template("movie.html", movie=movie)
+
+    else:
+        # Put SQL queries in here for update/new rating
+        movie = Movie.query.get(movie_id)
+        return render_template("rating_form.html", movie=movie)
 
 
 if __name__ == "__main__":
